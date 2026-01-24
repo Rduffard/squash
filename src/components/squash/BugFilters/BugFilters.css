@@ -1,0 +1,55 @@
+/* src/components/squash/BugFilters/BugFilters.css */
+
+.bug-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.bug-filters__group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.bug-filters__group--search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.bug-filters__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.bug-filters__select,
+.bug-filters__input {
+  font-size: 0.85rem;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.95);
+  color: var(--color-text);
+}
+
+.bug-filters__select:focus,
+.bug-filters__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+/* Mobile tweaks if you want them globally */
+@media (max-width: 768px) {
+  .bug-filters {
+    flex-direction: column;
+  }
+}

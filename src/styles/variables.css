@@ -1,0 +1,28 @@
+:root {
+  /* ===== Color Palette ===== */
+  --color-bg: #0f0f0f; /* Main background */
+  --color-bg-light: #1a1a1a;
+  --color-text: #f5f5f5;
+  --color-text-muted: #b5b5b5;
+
+  --color-accent: #ff914d; /* Squash orange */
+  --color-accent-hover: #ff7b26;
+
+  --color-card-bg: #141414;
+  --color-border: #2d2d2d;
+
+  /* ===== Shadows ===== */
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, 0.25);
+  --shadow-strong: 0 4px 24px rgba(0, 0, 0, 0.35);
+
+  /* ===== Sizing ===== */
+  --radius: 8px;
+  --radius-lg: 16px;
+
+  /* ===== Typography ===== */
+  --font-body: "Inter", sans-serif;
+  --font-heading: "Inter", sans-serif;
+
+  --line-height: 1.5;
+  --transition: 0.25s ease;
+}

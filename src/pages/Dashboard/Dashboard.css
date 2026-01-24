@@ -1,0 +1,132 @@
+.dashboard {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+/* Layout: sidebar + content */
+.dashboard__body {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* Main content area */
+.dashboard__content {
+  flex: 1;
+  max-width: 1200px;
+  padding: 16px 24px;
+}
+
+/* Page header inside content */
+.dashboard__page-header {
+  margin-bottom: 20px;
+}
+
+.dashboard__title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.dashboard__subtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+/* Card grid */
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* Cards */
+.dashboard__card {
+  background: var(--color-card-bg);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--color-border);
+}
+
+.dashboard__card--wide {
+  grid-column: span 2;
+}
+
+.dashboard__card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.dashboard__card-value {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--color-accent);
+}
+
+.dashboard__card-label {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+/* Recent activity list */
+
+.dashboard__activity-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dashboard__activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.dashboard__activity-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dashboard__activity-bug-id {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.dashboard__activity-title {
+  color: var(--color-text-muted);
+}
+
+.dashboard__activity-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.dashboard__activity-time {
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------- */
+/*    MEDIA QUERIES        */
+/* -------------------------------- */
+
+@media (max-width: 768px) {
+  .dashboard__body {
+    flex-direction: column;
+  }
+
+  .dashboard__card--wide {
+    grid-column: span 1;
+  }
+}

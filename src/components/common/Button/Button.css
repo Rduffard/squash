@@ -1,0 +1,79 @@
+.btn {
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.15s ease,
+    border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+/* sizes */
+
+.btn--sm {
+  padding: 6px 10px;
+}
+
+.btn--md {
+  padding: 8px 16px;
+}
+
+/* variants */
+
+.btn--primary {
+  background: linear-gradient(135deg, #f97316, #fb923c);
+  color: #0b0b0f;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.btn--primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+}
+
+.btn--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  opacity: 0.9;
+}
+
+/* subtle / ghost button for things like "Back" */
+
+.btn--ghost {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* link-style button */
+
+.btn--link {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--color-accent);
+}
+
+.btn--link:hover {
+  opacity: 0.8;
+}
+
+/* disabled */
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

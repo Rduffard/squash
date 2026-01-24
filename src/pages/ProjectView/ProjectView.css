@@ -1,0 +1,318 @@
+.project {
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.project__body {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.project__content {
+  flex: 1;
+  max-width: 1200px;
+  padding: 16px 24px;
+}
+
+/* ----------------------------- */
+/* NAV ROW (Back button + Tabs) */
+/* ----------------------------- */
+
+.project__nav-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 16px;
+}
+
+.project__back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.project__back-button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.project__back-button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+/* Tabs wrapper (Tabs component handles inner look) */
+
+/* .project__tabs { */
+/* hook for future tweaks; Tabs.css controls visuals */
+/* } */
+
+/* ----------------------------- */
+/* HEADERS */
+/* ----------------------------- */
+
+.project__header {
+  margin-bottom: 20px;
+}
+
+.project__title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.project__subtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+/* ----------------------------- */
+/* GRID (Overview cards) */
+/* ----------------------------- */
+
+.project__grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* ----------------------------- */
+/* CARDS */
+/* ----------------------------- */
+
+.project__card {
+  background: var(--color-card-bg);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--color-border);
+}
+
+.project__card--full {
+  grid-column: 1 / -1;
+}
+
+.project__card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.project__card-text {
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.project__card-text--muted {
+  color: var(--color-text-muted);
+}
+
+.project__card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.project__card-meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* ----------------------------- */
+/* OVERVIEW METRICS (pill rows) */
+/* ----------------------------- */
+
+.project__pill-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.project__pill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  font-size: 0.85rem;
+}
+
+.project__pill-label {
+  color: var(--color-text-muted);
+}
+
+.project__pill-value {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.project__pill-value--critical {
+  color: #fecaca;
+}
+
+.project__pill-value--high {
+  color: #fed7aa;
+}
+
+/* Recent activity snippet */
+
+.project__recent {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.project__recent-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+}
+
+.project__recent-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.85rem;
+}
+
+.project__recent-body--empty {
+  color: var(--color-text-muted);
+}
+
+.project__recent-id {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.project__recent-title {
+  color: var(--color-text);
+}
+
+.project__recent-date {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+/* ----------------------------- */
+/* TAB PANELS */
+/* ----------------------------- */
+
+.project__tab-panel {
+  margin-top: 8px;
+}
+
+/* Filters inside Defects tab */
+
+.project__filters {
+  margin-bottom: 16px;
+}
+
+/* ----------------------------- */
+/* BUG LIST IN DEFECTS TAB */
+/* ----------------------------- */
+
+.project__bug-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.project__bug-item {
+  padding: 0;
+  border: none;
+}
+
+/* ----------------------------- */
+/* ACTIVITY LIST */
+/* ----------------------------- */
+
+.project__activity-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project__activity-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.project__activity-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.project__activity-bug-id {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.project__activity-title {
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.project__activity-meta {
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+/* ----------------------------- */
+/* EMPTY MESSAGE */
+/* ----------------------------- */
+
+.project__empty {
+  color: var(--color-text-muted);
+  margin-top: 20px;
+}
+
+/* ----------------------------- */
+/* RESPONSIVE */
+/* ----------------------------- */
+
+@media (max-width: 768px) {
+  .project__body {
+    flex-direction: column;
+  }
+
+  .project__nav-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

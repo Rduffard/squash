@@ -1,0 +1,41 @@
+.sidebar {
+  width: 220px;
+  padding: 16px;
+  background: var(--color-bg-light);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  align-self: flex-start;
+}
+
+.sidebar__title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar__link {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition);
+}
+
+.sidebar__link:hover {
+  background: var(--color-card-bg);
+  color: var(--color-text);
+}
+
+.sidebar__link_active {
+  background: var(--color-accent);
+  color: #ffffff;
+}

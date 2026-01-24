@@ -1,0 +1,102 @@
+/* src/components/squash/BugCard/BugCard.css */
+
+.bug-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--color-surface-elevated, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.bug-card--clickable {
+  cursor: pointer;
+}
+
+.bug-card--clickable:hover {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(248, 250, 252, 0.18);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.7);
+}
+
+.bug-card__top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.bug-card__id-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bug-card__id {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.bug-card__title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text, #e5e7eb);
+}
+
+.bug-card__badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.bug-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.bug-card {
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--color-surface-elevated, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.bug-card__project {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bug-card__updated {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Optional larger header style when used in BugView header */
+.bug__header-card .bug-card__title {
+  font-size: 1.4rem;
+}
+
+.bug__header-card .bug-card__id {
+  font-size: 0.8rem;
+}
