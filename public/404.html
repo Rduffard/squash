@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+
+    <script>
+      // Save the route the user was trying to load
+      sessionStorage.redirect =
+        location.pathname + location.search + location.hash;
+
+      // Go to the SPA entry point
+      location.replace("/");
+    </script>
+  </head>
+  <body></body>
+</html>
