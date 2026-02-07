@@ -73,52 +73,15 @@
   color: var(--color-text-muted);
 }
 
-/* Recent activity list */
-
-.dashboard__activity-list {
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
+/* Recent activity (BugCards) */
+.dashboard__activity-cards {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.dashboard__activity-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-}
-
-.dashboard__activity-main {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.dashboard__activity-bug-id {
-  font-weight: 600;
-  color: var(--color-accent);
-}
-
-.dashboard__activity-title {
-  color: var(--color-text-muted);
-}
-
-.dashboard__activity-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-.dashboard__activity-time {
-  color: var(--color-text-muted);
+  gap: 10px;
 }
 
 /* -------------------------------- */
-/*    MEDIA QUERIES        */
+/*           MEDIA QUERIES           */
 /* -------------------------------- */
 
 @media (max-width: 768px) {

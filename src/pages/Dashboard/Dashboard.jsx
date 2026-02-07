@@ -1,23 +1,27 @@
+import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header/Header.jsx";
 import Sidebar from "../../components/layout/Sidebar/Sidebar.jsx";
-import StatusBadge from "../../components/squash/StatusBadge/StatusBadge.jsx";
+import BugCard from "../../components/squash/BugCard/BugCard.jsx";
 import "./Dashboard.css";
 
 export default function Dashboard({ projects = [], bugs = [] }) {
-  // Bugs that are not resolved/closed
+  const navigate = useNavigate();
+
   const openBugs = bugs.filter(
-    (bug) => bug.status !== "resolved" && bug.status !== "closed"
+    (bug) => bug.status !== "resolved" && bug.status !== "closed",
   );
 
-  // Projects marked active
   const activeProjects = projects.filter(
-    (project) => project.status === "active"
+    (project) => project.status === "active",
   );
 
-  // Most recently updated bugs (latest 5)
   const recentActivity = [...bugs]
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     .slice(0, 5);
+
+  const handleBugClick = (bugId) => {
+    navigate(`/bugs/${bugId}`);
+  };
 
   return (
     <main className="dashboard">
@@ -64,31 +68,25 @@ export default function Dashboard({ projects = [], bugs = [] }) {
                   You’ll see your latest bug updates and comments here.
                 </p>
               ) : (
-                <ul className="dashboard__activity-list">
-                  {recentActivity.map((bug) => (
-                    <li key={bug.id} className="dashboard__activity-item">
-                      <div className="dashboard__activity-main">
-                        <span className="dashboard__activity-bug-id">
-                          {bug.id}
-                        </span>
-                        <span className="dashboard__activity-title">
-                          {bug.title}
-                        </span>
-                      </div>
+                <div className="dashboard__activity-cards">
+                  {recentActivity.map((bug) => {
+                    const project = projects.find(
+                      (p) => p.id === bug.projectId,
+                    );
 
-                      <div className="dashboard__activity-meta">
-                        <StatusBadge status={bug.status} />
-                        <span className="dashboard__activity-time">
-                          Updated{" "}
-                          {new Date(bug.updatedAt).toLocaleDateString(
-                            undefined,
-                            { month: "short", day: "numeric" }
-                          )}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+                    return (
+                      <BugCard
+                        key={bug.id}
+                        bug={bug}
+                        project={project}
+                        onClick={() => handleBugClick(bug.id)}
+                        className="dashboard__activity-card"
+                        showProject={true}
+                        showUpdatedAt={true}
+                      />
+                    );
+                  })}
+                </div>
               )}
             </article>
           </section>
