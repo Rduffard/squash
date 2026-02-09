@@ -6,7 +6,7 @@ export default function ProjectActivityTab({ projectBugs = [] }) {
       [...projectBugs]
         .sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0))
         .slice(0, 5),
-    [projectBugs]
+    [projectBugs],
   );
 
   return (

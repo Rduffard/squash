@@ -11,15 +11,27 @@ export default function Header() {
     navigate("/login");
   }
 
+  function handleLogoClick() {
+    navigate("/dashboard");
+  }
+
   return (
     <header className="app-header">
       <div className="app-header__left">
-        <span className="app-header__logo">Squash 🐛</span>
+        <button
+          type="button"
+          className="app-header__logo"
+          onClick={handleLogoClick}
+          aria-label="Go to dashboard"
+        >
+          Squash 🐛
+        </button>
       </div>
 
       <nav className="app-header__nav">
         <NavLink
           to="/dashboard"
+          end
           className={({ isActive }) =>
             "app-header__link" + (isActive ? " app-header__link_active" : "")
           }
@@ -28,7 +40,7 @@ export default function Header() {
         </NavLink>
 
         <NavLink
-          to="/settings"
+          to="/dashboard/settings"
           className={({ isActive }) =>
             "app-header__link" + (isActive ? " app-header__link_active" : "")
           }

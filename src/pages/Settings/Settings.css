@@ -1,24 +1,13 @@
-/* OUTER WRAPPER (like .dashboard) */
+/* PAGE WRAP (inside DashboardLayout main) */
 .settings-page {
-  min-height: 100vh;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-}
-
-/* LAYOUT: SIDEBAR + CONTENT (like .dashboard__body) */
-.settings-page__body {
-  display: flex;
-  gap: 16px;
-  margin-top: 16px;
-  flex: 1;
-}
-
-/* MAIN CONTENT AREA (like .dashboard__content) */
-.settings {
-  flex: 1;
+  width: 100%;
   max-width: 1200px;
   padding: 16px 24px;
+}
+
+/* MAIN CONTENT AREA */
+.settings {
+  width: 100%;
 }
 
 /* HEADER INSIDE CONTENT */
@@ -52,7 +41,10 @@
   background: linear-gradient(135deg, #f97316, #fb923c);
   color: #0b0b0f;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-  transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.15s ease;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    opacity 0.15s ease;
 }
 
 .settings__save-button:hover {
@@ -66,6 +58,7 @@
   opacity: 0.9;
 }
 
+/* LAYOUT */
 .settings__layout {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
@@ -79,7 +72,6 @@
 }
 
 /* Cards */
-
 .settings-card {
   background: var(--color-surface, #050509);
   border-radius: 16px;
@@ -126,7 +118,9 @@
   color: var(--color-text, #f9fafb);
   font-size: 0.9rem;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
     background-color 0.15s ease;
 }
 
@@ -164,7 +158,6 @@
 }
 
 /* Toggle styles */
-
 .settings-toggle {
   display: inline-flex;
   align-items: center;
@@ -186,7 +179,9 @@
   border: 1px solid #4b5563;
   position: relative;
   flex-shrink: 0;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .settings-toggle__visual::after {
@@ -198,7 +193,9 @@
   height: 14px;
   border-radius: 999px;
   background: #9ca3af;
-  transition: transform 0.15s ease, background 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
 }
 
 /* checked state */
@@ -217,7 +214,6 @@
 }
 
 /* Segmented control */
-
 .settings-segmented {
   display: inline-flex;
   padding: 3px;
@@ -244,7 +240,6 @@
 }
 
 /* Responsive */
-
 @media (max-width: 900px) {
   .settings__layout {
     grid-template-columns: minmax(0, 1fr);
@@ -257,5 +252,11 @@
 
   .settings__save-button {
     align-self: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings-page {
+    padding: 12px 16px;
   }
 }

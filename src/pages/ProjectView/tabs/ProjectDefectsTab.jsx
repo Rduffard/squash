@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import BugFilters from "../../components/squash/BugFilters/BugFilters.jsx";
-import BugCard from "../../components/squash/BugCard/BugCard.jsx";
+import BugFilters from "../../../components/squash/BugFilters/BugFilters.jsx";
+import BugCard from "../../../components/squash/BugCard/BugCard.jsx";
 
 export default function ProjectDefectsTab({ project, projectBugs = [] }) {
   const navigate = useNavigate();
@@ -13,9 +13,9 @@ export default function ProjectDefectsTab({ project, projectBugs = [] }) {
   const openBugs = useMemo(
     () =>
       projectBugs.filter(
-        (bug) => bug.status !== "resolved" && bug.status !== "closed"
+        (bug) => bug.status !== "resolved" && bug.status !== "closed",
       ),
-    [projectBugs]
+    [projectBugs],
   );
 
   const filteredProjectBugs = useMemo(() => {
@@ -39,7 +39,7 @@ export default function ProjectDefectsTab({ project, projectBugs = [] }) {
     }
 
     result.sort(
-      (a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
+      (a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0),
     );
 
     return result;
@@ -76,7 +76,7 @@ export default function ProjectDefectsTab({ project, projectBugs = [] }) {
                 <BugCard
                   bug={bug}
                   project={project}
-                  onClick={() => navigate(`/bugs/${bug.id}`)}
+                  onClick={() => navigate(`/dashboard/bugs/${bug.id}`)}
                   className="project__bug-card"
                 />
               </li>

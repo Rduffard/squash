@@ -1,0 +1,11 @@
+.dashboard-layout {
+  min-height: 100vh;
+}
+
+.dashboard-layout__body {
+  display: flex;
+}
+
+.dashboard-layout__main {
+  flex: 1;
+}

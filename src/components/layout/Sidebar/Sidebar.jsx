@@ -9,6 +9,7 @@ export default function Sidebar() {
       <nav className="sidebar__nav">
         <NavLink
           to="/dashboard"
+          end
           className={({ isActive }) =>
             "sidebar__link" + (isActive ? " sidebar__link_active" : "")
           }
@@ -17,7 +18,7 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink
-          to="/projects"
+          to="/dashboard/projects"
           className={({ isActive }) =>
             "sidebar__link" + (isActive ? " sidebar__link_active" : "")
           }
@@ -26,7 +27,7 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink
-          to="/bugs"
+          to="/dashboard/bugs"
           className={({ isActive }) =>
             "sidebar__link" + (isActive ? " sidebar__link_active" : "")
           }
