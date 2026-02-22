@@ -21,18 +21,23 @@ export default function ProjectActivityTab({ projectBugs = [] }) {
         ) : (
           <ul className="project__activity-list">
             {recentActivity.map((bug) => (
-              <li key={bug.id} className="project__activity-item">
+              <li key={bug._id} className="project__activity-item">
                 <div className="project__activity-main">
-                  <span className="project__activity-bug-id">{bug.id}</span>
+                  <span className="project__activity-bug-id">
+                    {String(bug._id)}
+                  </span>
                   <span className="project__activity-title">{bug.title}</span>
                 </div>
+
                 <div className="project__activity-meta">
                   <span className="project__activity-time">
                     Updated{" "}
-                    {new Date(bug.updatedAt).toLocaleDateString(undefined, {
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {bug.updatedAt
+                      ? new Date(bug.updatedAt).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                        })
+                      : "—"}
                   </span>
                 </div>
               </li>

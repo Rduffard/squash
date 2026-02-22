@@ -7,7 +7,7 @@ export default function ProjectDefectsTab({ project, projectBugs = [] }) {
   const navigate = useNavigate();
 
   const [statusFilter, setStatusFilter] = useState("all");
-  const [severityFilter, setSeverityFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   const openBugs = useMemo(
@@ -25,15 +25,17 @@ export default function ProjectDefectsTab({ project, projectBugs = [] }) {
       result = result.filter((bug) => bug.status === statusFilter);
     }
 
-    if (severityFilter !== "all") {
-      result = result.filter((bug) => bug.severity === severityFilter);
+    if (priorityFilter !== "all") {
+      result = result.filter((bug) => bug.priority === priorityFilter);
     }
 
     const trimmed = searchTerm.trim().toLowerCase();
     if (trimmed) {
       result = result.filter((bug) => {
-        const idMatch = bug.id.toLowerCase().includes(trimmed);
-        const titleMatch = bug.title.toLowerCase().includes(trimmed);
+        const idMatch = String(bug._id).toLowerCase().includes(trimmed);
+        const titleMatch = String(bug.title || "")
+          .toLowerCase()
+          .includes(trimmed);
         return idMatch || titleMatch;
       });
     }
@@ -43,16 +45,16 @@ export default function ProjectDefectsTab({ project, projectBugs = [] }) {
     );
 
     return result;
-  }, [projectBugs, statusFilter, severityFilter, searchTerm]);
+  }, [projectBugs, statusFilter, priorityFilter, searchTerm]);
 
   return (
     <section className="project__tab-panel">
       <BugFilters
         statusFilter={statusFilter}
-        severityFilter={severityFilter}
+        priorityFilter={priorityFilter}
         searchTerm={searchTerm}
         onStatusChange={setStatusFilter}
-        onSeverityChange={setSeverityFilter}
+        onPriorityChange={setPriorityFilter}
         onSearchChange={setSearchTerm}
         className="project__filters"
       />
@@ -72,11 +74,11 @@ export default function ProjectDefectsTab({ project, projectBugs = [] }) {
         ) : (
           <ul className="project__bug-list">
             {filteredProjectBugs.map((bug) => (
-              <li key={bug.id} className="project__bug-item">
+              <li key={bug._id} className="project__bug-item">
                 <BugCard
                   bug={bug}
                   project={project}
-                  onClick={() => navigate(`/dashboard/bugs/${bug.id}`)}
+                  onClick={() => navigate(`/dashboard/bugs/${bug._id}`)}
                   className="project__bug-card"
                 />
               </li>

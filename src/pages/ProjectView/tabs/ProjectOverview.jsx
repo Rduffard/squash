@@ -7,11 +7,11 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
     );
   }, [projectBugs]);
 
+  // Backend statuses: open | in_progress | resolved | closed
   const statusCounts = useMemo(() => {
     const counts = {
-      new: 0,
-      "in-progress": 0,
-      blocked: 0,
+      open: 0,
+      in_progress: 0,
       resolved: 0,
       closed: 0,
       other: 0,
@@ -26,7 +26,8 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
     return counts;
   }, [projectBugs]);
 
-  const severityCounts = useMemo(() => {
+  // Backend priority: low | medium | high | critical
+  const priorityCounts = useMemo(() => {
     const counts = {
       low: 0,
       medium: 0,
@@ -36,7 +37,7 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
     };
 
     projectBugs.forEach((bug) => {
-      const key = bug.severity;
+      const key = bug.priority;
       if (counts[key] !== undefined) counts[key] += 1;
       else counts.other += 1;
     });
@@ -99,18 +100,14 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
 
         <ul className="project__pill-list">
           <li className="project__pill-row">
-            <span className="project__pill-label">New</span>
-            <span className="project__pill-value">{statusCounts.new}</span>
+            <span className="project__pill-label">Open</span>
+            <span className="project__pill-value">{statusCounts.open}</span>
           </li>
           <li className="project__pill-row">
             <span className="project__pill-label">In progress</span>
             <span className="project__pill-value">
-              {statusCounts["in-progress"]}
+              {statusCounts.in_progress}
             </span>
-          </li>
-          <li className="project__pill-row">
-            <span className="project__pill-label">Blocked</span>
-            <span className="project__pill-value">{statusCounts.blocked}</span>
           </li>
           <li className="project__pill-row">
             <span className="project__pill-label">Resolved</span>
@@ -123,34 +120,34 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
         </ul>
       </article>
 
-      {/* Severity & recency card */}
+      {/* Priority & recency card */}
       <article className="project__card">
         <h2 className="project__card-title">Risk &amp; recent activity</h2>
 
         <p className="project__card-text project__card-text--muted">
-          Quick look at severity mix and the most recent change.
+          Quick look at priority mix and the most recent change.
         </p>
 
         <ul className="project__pill-list">
           <li className="project__pill-row">
-            <span className="project__pill-label">Critical issues</span>
+            <span className="project__pill-label">Critical</span>
             <span className="project__pill-value project__pill-value--critical">
-              {severityCounts.critical}
+              {priorityCounts.critical}
             </span>
           </li>
           <li className="project__pill-row">
             <span className="project__pill-label">High</span>
             <span className="project__pill-value project__pill-value--high">
-              {severityCounts.high}
+              {priorityCounts.high}
             </span>
           </li>
           <li className="project__pill-row">
             <span className="project__pill-label">Medium</span>
-            <span className="project__pill-value">{severityCounts.medium}</span>
+            <span className="project__pill-value">{priorityCounts.medium}</span>
           </li>
           <li className="project__pill-row">
             <span className="project__pill-label">Low</span>
-            <span className="project__pill-value">{severityCounts.low}</span>
+            <span className="project__pill-value">{priorityCounts.low}</span>
           </li>
         </ul>
 
@@ -159,7 +156,9 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
 
           {lastUpdatedBug ? (
             <div className="project__recent-body">
-              <span className="project__recent-id">{lastUpdatedBug.id}</span>
+              <span className="project__recent-id">
+                {String(lastUpdatedBug._id)}
+              </span>
               <span className="project__recent-title">
                 {lastUpdatedBug.title}
               </span>

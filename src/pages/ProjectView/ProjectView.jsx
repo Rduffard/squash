@@ -6,11 +6,15 @@ import ProjectOverview from "./tabs/ProjectOverview.jsx";
 import ProjectDefectsTab from "./tabs/ProjectDefectsTab.jsx";
 import ProjectActivityTab from "./tabs/ProjectActivityTab.jsx";
 
+import AddBugModal from "../../components/squash/AddBugModal/AddBugModal.jsx";
+
 import "./ProjectView.css";
 
-export default function ProjectView({ projects = [], bugs = [] }) {
+export default function ProjectView({ projects = [], bugs = [], addBug }) {
   const { projectId } = useParams();
   const [activeTab, setActiveTab] = useState("overview");
+
+  const [isAddBugOpen, setIsAddBugOpen] = useState(false);
 
   const project = useMemo(
     () => projects.find((p) => String(p._id) === String(projectId)),
@@ -22,6 +26,21 @@ export default function ProjectView({ projects = [], bugs = [] }) {
     [bugs, projectId],
   );
 
+  function handleOpenAddBug() {
+    setIsAddBugOpen(true);
+  }
+
+  function handleCloseAddBug() {
+    setIsAddBugOpen(false);
+  }
+
+  async function handleSubmitBug(payload) {
+    if (typeof addBug !== "function") {
+      throw new Error("ProjectView: addBug(payload) is not wired yet.");
+    }
+    await addBug(payload);
+  }
+
   return (
     <section className="project">
       <ProjectHeader
@@ -29,6 +48,7 @@ export default function ProjectView({ projects = [], bugs = [] }) {
         projectId={projectId}
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        onNewBug={handleOpenAddBug}
       />
 
       {!project ? (
@@ -38,6 +58,14 @@ export default function ProjectView({ projects = [], bugs = [] }) {
         </p>
       ) : (
         <>
+          <AddBugModal
+            isOpen={isAddBugOpen}
+            onClose={handleCloseAddBug}
+            onSubmit={handleSubmitBug}
+            projects={projects} // not used when defaultProjectId exists, but harmless
+            defaultProjectId={projectId}
+          />
+
           {activeTab === "overview" && (
             <ProjectOverview project={project} projectBugs={projectBugs} />
           )}

@@ -15,9 +15,9 @@ export default function DashboardHome({
     (bug) => bug.status !== "resolved" && bug.status !== "closed",
   );
 
-  const activeProjects = projects.filter(
-    (project) => project.status === "active",
-  );
+  // MVP: projects don't have a status field in the backend yet
+  // Treat all accessible projects as "active"
+  const activeProjects = Array.isArray(projects) ? projects : [];
 
   // Most recent first
   const recentActivity = [...bugs]
@@ -62,7 +62,7 @@ export default function DashboardHome({
           <h2 className="dashboard__card-title">Active Projects</h2>
           <p className="dashboard__card-value">{activeProjects.length}</p>
           <p className="dashboard__card-label">
-            Projects currently marked as active.
+            Projects you currently have access to.
           </p>
         </article>
 
@@ -77,7 +77,6 @@ export default function DashboardHome({
           ) : (
             <div className="dashboard__activity-cards">
               {recentActivity.map((bug) => {
-                // ✅ Mongo-safe matching
                 const project = projects.find(
                   (p) => String(p._id) === String(bug.projectId),
                 );

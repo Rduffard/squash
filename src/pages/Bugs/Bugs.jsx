@@ -3,24 +3,43 @@ import { useNavigate } from "react-router-dom";
 import { useState, useMemo } from "react";
 import Tabs from "../../components/common/Tabs/Tabs.jsx";
 import BugFilters from "../../components/squash/BugFilters/BugFilters.jsx";
+import Button from "../../components/common/Button/Button.jsx";
+import AddBugModal from "../../components/squash/AddBugModal/AddBugModal.jsx";
 import "./Bugs.css";
 
-export default function Bugs({ bugs = [], projects = [] }) {
+export default function Bugs({ bugs = [], projects = [], addBug }) {
   const navigate = useNavigate();
+
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   // Tabs across top
   const [activeFilter, setActiveFilter] = useState("all"); // "all" | "open" | "closed"
 
   // Extra filters
   const [statusFilter, setStatusFilter] = useState("all");
-  const [severityFilter, setSeverityFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+
+  function handleOpenAdd() {
+    setIsAddOpen(true);
+  }
+
+  function handleCloseAdd() {
+    setIsAddOpen(false);
+  }
+
+  async function handleSubmitBug(payload) {
+    if (typeof addBug !== "function") {
+      throw new Error("Bugs page: addBug(payload) is not wired yet.");
+    }
+    await addBug(payload);
+  }
 
   // Map projectId -> project once
   const projectById = useMemo(
     () =>
       projects.reduce((acc, project) => {
-        acc[project.id] = project;
+        acc[String(project._id)] = project;
         return acc;
       }, {}),
     [projects],
@@ -46,17 +65,19 @@ export default function Bugs({ bugs = [], projects = [] }) {
       result = result.filter((bug) => bug.status === statusFilter);
     }
 
-    // Severity filter
-    if (severityFilter !== "all") {
-      result = result.filter((bug) => bug.severity === severityFilter);
+    // Priority filter
+    if (priorityFilter !== "all") {
+      result = result.filter((bug) => bug.priority === priorityFilter);
     }
 
     // Search
     const trimmed = searchTerm.trim().toLowerCase();
     if (trimmed) {
       result = result.filter((bug) => {
-        const idMatch = bug.id.toLowerCase().includes(trimmed);
-        const titleMatch = bug.title.toLowerCase().includes(trimmed);
+        const idMatch = String(bug._id).toLowerCase().includes(trimmed);
+        const titleMatch = String(bug.title || "")
+          .toLowerCase()
+          .includes(trimmed);
         return idMatch || titleMatch;
       });
     }
@@ -67,7 +88,7 @@ export default function Bugs({ bugs = [], projects = [] }) {
     );
 
     return result;
-  }, [bugs, activeFilter, statusFilter, severityFilter, searchTerm]);
+  }, [bugs, activeFilter, statusFilter, priorityFilter, searchTerm]);
 
   const formatUpdated = (dateStr) => {
     if (!dateStr) return "—";
@@ -77,8 +98,8 @@ export default function Bugs({ bugs = [], projects = [] }) {
     });
   };
 
-  const severityIcon = (severity) => {
-    switch (severity) {
+  const priorityIcon = (priority) => {
+    switch (priority) {
       case "critical":
         return "🔥";
       case "high":
@@ -104,6 +125,8 @@ export default function Bugs({ bugs = [], projects = [] }) {
         </div>
 
         <div className="bugs__header-right">
+          <Button onClick={handleOpenAdd}>+ New Bug</Button>
+
           <Tabs
             tabs={[
               { id: "all", label: "All" },
@@ -117,13 +140,20 @@ export default function Bugs({ bugs = [], projects = [] }) {
         </div>
       </div>
 
+      <AddBugModal
+        isOpen={isAddOpen}
+        onClose={handleCloseAdd}
+        onSubmit={handleSubmitBug}
+        projects={projects}
+      />
+
       {/* Reusable filter component */}
       <BugFilters
         statusFilter={statusFilter}
-        severityFilter={severityFilter}
+        priorityFilter={priorityFilter}
         searchTerm={searchTerm}
         onStatusChange={setStatusFilter}
-        onSeverityChange={setSeverityFilter}
+        onPriorityChange={setPriorityFilter}
         onSearchChange={setSearchTerm}
       />
 
@@ -134,7 +164,7 @@ export default function Bugs({ bugs = [], projects = [] }) {
           <div className="bugs__cell bugs__cell--id">ID</div>
           <div className="bugs__cell bugs__cell--title">Title</div>
           <div className="bugs__cell bugs__cell--status">Status</div>
-          <div className="bugs__cell bugs__cell--severity">Severity</div>
+          <div className="bugs__cell bugs__cell--severity">Priority</div>
           <div className="bugs__cell bugs__cell--project">Project</div>
           <div className="bugs__cell bugs__cell--updated">Updated</div>
         </div>
@@ -148,23 +178,23 @@ export default function Bugs({ bugs = [], projects = [] }) {
           </div>
         ) : (
           filteredBugs.map((bug) => {
-            const project = projectById[bug.projectId];
+            const project = projectById[String(bug.projectId)];
 
             return (
               <button
-                key={bug.id}
+                key={bug._id}
                 type="button"
                 className="bugs__row bugs__row--clickable"
-                onClick={() => navigate(`/dashboard/bugs/${bug.id}`)}
+                onClick={() => navigate(`/dashboard/bugs/${bug._id}`)}
               >
                 <div className="bugs__cell bugs__cell--icon">
                   <span className="bugs__icon">
-                    {severityIcon(bug.severity)}
+                    {priorityIcon(bug.priority)}
                   </span>
                 </div>
 
                 <div className="bugs__cell bugs__cell--id">
-                  <span className="bugs__id">{bug.id}</span>
+                  <span className="bugs__id">{String(bug._id)}</span>
                 </div>
 
                 <div className="bugs__cell bugs__cell--title">
@@ -181,15 +211,15 @@ export default function Bugs({ bugs = [], projects = [] }) {
 
                 <div className="bugs__cell bugs__cell--severity">
                   <span
-                    className={`bugs__severity-pill bugs__severity-pill--${bug.severity}`}
+                    className={`bugs__severity-pill bugs__severity-pill--${bug.priority}`}
                   >
-                    {bug.severity}
+                    {bug.priority}
                   </span>
                 </div>
 
                 <div className="bugs__cell bugs__cell--project">
                   <span className="bugs__project-name">
-                    {project ? project.name : bug.projectId}
+                    {project ? project.name : String(bug.projectId)}
                   </span>
                 </div>
 

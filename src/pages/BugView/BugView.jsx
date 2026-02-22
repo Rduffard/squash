@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import StatusBadge from "../../components/squash/StatusBadge/StatusBadge.jsx";
 import PriorityTag from "../../components/squash/PriorityTag/PriorityTag.jsx";
 import Button from "../../components/common/Button/Button.jsx";
@@ -12,26 +12,35 @@ export default function BugView({ bugs = [], projects = [] }) {
 
   const [activeTab, setActiveTab] = useState("details"); // "details" | "activity"
 
-  const bug = bugs.find((b) => b.id === bugId);
-  const project = bug ? projects.find((p) => p.id === bug.projectId) : null;
+  const bug = useMemo(
+    () => bugs.find((b) => String(b._id) === String(bugId)),
+    [bugs, bugId],
+  );
 
-  const createdAt =
-    bug && bug.createdAt
-      ? new Date(bug.createdAt).toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })
-      : null;
+  const project = useMemo(() => {
+    if (!bug) return null;
+    return (
+      projects.find((p) => String(p._id) === String(bug.projectId)) || null
+    );
+  }, [projects, bug]);
 
-  const updatedAt =
-    bug && bug.updatedAt
-      ? new Date(bug.updatedAt).toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        })
-      : null;
+  const createdAt = bug?.createdAt
+    ? new Date(bug.createdAt).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
+
+  const updatedAt = bug?.updatedAt
+    ? new Date(bug.updatedAt).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
+
+  const displayId = bug ? String(bug._id) : String(bugId);
 
   return (
     <section className="bug">
@@ -64,15 +73,15 @@ export default function BugView({ bugs = [], projects = [] }) {
         <h1 className="bug__title">{bug ? bug.title : `Bug ${bugId}`}</h1>
         <p className="bug__subtitle">
           {bug
-            ? `${bug.id} • ${project ? project.name : "Unknown project"}`
+            ? `${displayId} • ${project ? project.name : "Unknown project"}`
             : "This bug could not be found."}
         </p>
       </header>
 
       {!bug ? (
         <p className="bug__empty">
-          No bug data available. Check that the ID in the URL matches one from
-          your demo data (e.g. <code>BUG-101</code>, <code>BUG-102</code>).
+          No bug data available. Check that the ID in the URL matches an
+          existing bug.
         </p>
       ) : (
         <>
@@ -83,10 +92,9 @@ export default function BugView({ bugs = [], projects = [] }) {
                 <h2 className="bug__card-title">Details</h2>
 
                 <p className="bug__card-text">
-                  This is a demo detail view for <strong>{bug.title}</strong>.
-                  In a real version of Squash, you’d see a full description,
-                  steps to reproduce, expected vs. actual behavior, and
-                  attachments here.
+                  {bug.description?.trim()
+                    ? bug.description
+                    : "No description provided yet."}
                 </p>
 
                 <dl className="bug__details">
@@ -100,21 +108,22 @@ export default function BugView({ bugs = [], projects = [] }) {
                   <div className="bug__detail">
                     <dt className="bug__detail-label">Priority</dt>
                     <dd className="bug__detail-value">
-                      <PriorityTag severity={bug.severity} />
+                      {/* MVP: PriorityTag should accept `priority` (see note below) */}
+                      <PriorityTag priority={bug.priority} />
                     </dd>
                   </div>
 
                   <div className="bug__detail">
                     <dt className="bug__detail-label">Assignee</dt>
                     <dd className="bug__detail-value">
-                      {bug.assignee || "Unassigned"}
+                      {bug.assignee ? String(bug.assignee) : "Unassigned"}
                     </dd>
                   </div>
 
                   <div className="bug__detail">
                     <dt className="bug__detail-label">Project</dt>
                     <dd className="bug__detail-value">
-                      {project ? project.name : bug.projectId}
+                      {project ? project.name : String(bug.projectId)}
                     </dd>
                   </div>
 
@@ -146,16 +155,16 @@ export default function BugView({ bugs = [], projects = [] }) {
                 <article className="bug__card">
                   <h3 className="bug__card-title">Assignee</h3>
                   <p className="bug__card-text">
-                    {bug.assignee || "Unassigned"}
+                    {bug.assignee ? String(bug.assignee) : "Unassigned"}
                   </p>
                 </article>
 
                 <article className="bug__card">
                   <h3 className="bug__card-title">Metadata</h3>
                   <p className="bug__card-text">
-                    Project: {project ? project.name : bug.projectId}
+                    Project: {project ? project.name : String(bug.projectId)}
                     <br />
-                    Priority: <PriorityTag severity={bug.severity} />
+                    Priority: <PriorityTag priority={bug.priority} />
                   </p>
                 </article>
               </aside>

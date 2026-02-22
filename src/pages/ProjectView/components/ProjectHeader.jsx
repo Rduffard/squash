@@ -7,12 +7,13 @@ export default function ProjectHeader({
   projectId,
   activeTab,
   onTabChange,
+  onNewBug,
 }) {
   const navigate = useNavigate();
 
   return (
     <>
-      {/* NAV ROW: back + tabs */}
+      {/* NAV ROW: back + new bug + tabs */}
       <div className="project__nav-row">
         <Button
           variant="ghost"
@@ -22,6 +23,12 @@ export default function ProjectHeader({
         >
           ← Back to Projects
         </Button>
+
+        {project && (
+          <Button onClick={onNewBug} className="project__new-bug-btn">
+            + New Bug
+          </Button>
+        )}
 
         {project && (
           <Tabs
@@ -44,9 +51,7 @@ export default function ProjectHeader({
         </h1>
 
         <p className="project__subtitle">
-          {project
-            ? `ID: ${project.id} • Status: ${project.status}`
-            : "This project could not be found."}
+          {project ? `ID: ${project._id}` : "This project could not be found."}
         </p>
       </header>
     </>
