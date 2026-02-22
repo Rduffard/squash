@@ -8,6 +8,12 @@
 
 .projects-page__header {
   margin-bottom: 20px;
+
+  /* NEW */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .projects-page__title {
@@ -27,6 +33,15 @@
   color: var(--color-text-muted);
 }
 
+/* NEW: only if you use the wrapper div I suggested */
+.projects-page__empty-state {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
 .projects-page__list {
   list-style: none;
   margin: 0;
@@ -40,5 +55,11 @@
 @media (max-width: 768px) {
   .projects-page {
     padding: 12px 16px;
+  }
+
+  /* Optional: stack header on small screens */
+  .projects-page__header {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

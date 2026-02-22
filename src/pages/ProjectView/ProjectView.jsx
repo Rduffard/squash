@@ -10,16 +10,15 @@ import "./ProjectView.css";
 
 export default function ProjectView({ projects = [], bugs = [] }) {
   const { projectId } = useParams();
-
-  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "bugs" | "activity"
+  const [activeTab, setActiveTab] = useState("overview");
 
   const project = useMemo(
-    () => projects.find((p) => p.id === projectId),
+    () => projects.find((p) => String(p._id) === String(projectId)),
     [projects, projectId],
   );
 
   const projectBugs = useMemo(
-    () => bugs.filter((bug) => bug.projectId === projectId),
+    () => bugs.filter((bug) => String(bug.projectId) === String(projectId)),
     [bugs, projectId],
   );
 
@@ -35,7 +34,7 @@ export default function ProjectView({ projects = [], bugs = [] }) {
       {!project ? (
         <p className="project__empty">
           No project data available. Check that the ID in the URL matches one
-          from your demo data (e.g. <code>PRJ-1</code>, <code>PRJ-2</code>).
+          from your database.
         </p>
       ) : (
         <>

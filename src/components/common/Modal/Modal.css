@@ -1,0 +1,61 @@
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 9999;
+}
+
+.modal__card {
+  width: 100%;
+  max-width: 560px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modal__close {
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 10px;
+}
+
+.modal__close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text);
+}
+
+.modal__body {
+  padding: 18px;
+}
+
+.modal__footer {
+  padding: 14px 18px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}

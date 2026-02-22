@@ -1,8 +1,14 @@
+// src/pages/Dashboard/DashboardHome/DashboardHome.jsx
 import { useNavigate } from "react-router-dom";
-import BugCard from "../../components/squash/BugCard/BugCard.jsx";
+import BugCard from "../../../components/squash/BugCard/BugCard.jsx";
 import "./DashboardHome.css";
 
-export default function DashboardHome({ projects = [], bugs = [] }) {
+export default function DashboardHome({
+  projects = [],
+  bugs = [],
+  loading,
+  loadError,
+}) {
   const navigate = useNavigate();
 
   const openBugs = bugs.filter(
@@ -13,15 +19,17 @@ export default function DashboardHome({ projects = [], bugs = [] }) {
     (project) => project.status === "active",
   );
 
+  // Most recent first
   const recentActivity = [...bugs]
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+    .sort(
+      (a, b) =>
+        new Date(b.updatedAt || b.createdAt || 0) -
+        new Date(a.updatedAt || a.createdAt || 0),
+    )
     .slice(0, 5);
 
   const handleBugClick = (bugId) => {
-    // ✅ if bug routes live under /dashboard
     navigate(`/dashboard/bugs/${bugId}`);
-    // or if you prefer relative:
-    // navigate(`bugs/${bugId}`);
   };
 
   return (
@@ -32,6 +40,10 @@ export default function DashboardHome({ projects = [], bugs = [] }) {
           Welcome back to Squash. Track bugs, projects, and progress here.
         </p>
       </header>
+
+      {loadError ? <p className="dashboard__error">{loadError}</p> : null}
+
+      {loading ? <p className="dashboard__loading">Loading…</p> : null}
 
       <section className="dashboard__grid">
         {/* Open Bugs */}
@@ -65,14 +77,17 @@ export default function DashboardHome({ projects = [], bugs = [] }) {
           ) : (
             <div className="dashboard__activity-cards">
               {recentActivity.map((bug) => {
-                const project = projects.find((p) => p.id === bug.projectId);
+                // ✅ Mongo-safe matching
+                const project = projects.find(
+                  (p) => String(p._id) === String(bug.projectId),
+                );
 
                 return (
                   <BugCard
-                    key={bug.id}
+                    key={bug._id}
                     bug={bug}
                     project={project}
-                    onClick={() => handleBugClick(bug.id)}
+                    onClick={() => handleBugClick(bug._id)}
                     className="dashboard__activity-card"
                     showProject={true}
                     showUpdatedAt={true}
