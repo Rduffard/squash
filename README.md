@@ -165,7 +165,7 @@ To link a repo:
 2.  Click "Link Repository"\
 3.  Enter:
 
-facebook/react
+username/repo
 
 GitHub data will appear inside the project overview.
 
@@ -191,10 +191,22 @@ GitHub data will appear inside the project overview.
 
 ---
 
+## Project Pitch
+
+- In this demo video- https://drive.google.com/file/d/1DIwfEbfLLPEC31r-mL7Kx7jRrh3YA7Bg/view?usp=sharing, I explain the core workflow of Squash, a full-stack bug-tracking application. The walkthrough covers project creation, bug management, authenticated routes, and how data flows between the frontend and backend API.
+
+The video also demonstrates a GitHub API integration, where projects can be linked to a public repository to display live repository data such as stars, forks, and open issues. This showcases practical use of third-party APIs alongside custom backend endpoints and client-side state management.
+
+## Links
+
+- Frontend Repository - https://github.com/Rduffard/squash
+- Backend Repository - https://github.com/Rduffard/crossworld_backend (Shared with Portfolio Website)
+- Project Pitch - https://drive.google.com/file/d/1DIwfEbfLLPEC31r-mL7Kx7jRrh3YA7Bg/view?usp=sharing
+
 ## 👨‍💻 Author
 
-Built by Romain Duffard\
-Software Engineering Student & QA Professional
+Built by Romain Duffard
+Software Engineer & QA Professional
 
 ---
 
