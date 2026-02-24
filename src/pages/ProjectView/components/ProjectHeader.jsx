@@ -8,12 +8,17 @@ export default function ProjectHeader({
   activeTab,
   onTabChange,
   onNewBug,
+  onLinkRepo, // NEW
 }) {
   const navigate = useNavigate();
 
+  const hasRepo = Boolean(
+    project?.repoFullName && String(project.repoFullName).trim(),
+  );
+
   return (
     <>
-      {/* NAV ROW: back + new bug + tabs */}
+      {/* NAV ROW: back + actions + tabs */}
       <div className="project__nav-row">
         <Button
           variant="ghost"
@@ -25,9 +30,20 @@ export default function ProjectHeader({
         </Button>
 
         {project && (
-          <Button onClick={onNewBug} className="project__new-bug-btn">
-            + New Bug
-          </Button>
+          <div className="project__actions">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onLinkRepo}
+              className="project__link-repo-btn"
+            >
+              {hasRepo ? "Edit GitHub Repo" : "Link GitHub Repo"}
+            </Button>
+
+            <Button onClick={onNewBug} className="project__new-bug-btn">
+              + New Bug
+            </Button>
+          </div>
         )}
 
         {project && (
@@ -53,6 +69,13 @@ export default function ProjectHeader({
         <p className="project__subtitle">
           {project ? `ID: ${project._id}` : "This project could not be found."}
         </p>
+
+        {/* Optional small hint row */}
+        {project?.repoFullName ? (
+          <p className="project__subtitle">
+            GitHub: <span>{project.repoFullName}</span>
+          </p>
+        ) : null}
       </header>
     </>
   );

@@ -19,6 +19,9 @@ import Settings from "../../pages/Settings/Settings.jsx";
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute.jsx";
 import { useAuth } from "../../hooks/useAuth";
 
+// ✅ NEW
+import Preloader from "../../components/common/Preloader/Preloader.jsx";
+
 function App() {
   const { token, user } = useAuth();
 
@@ -165,6 +168,12 @@ function App() {
       ),
     );
   }, []);
+
+  // ✅ NEW: Full-screen preloader during initial authenticated fetch
+  // (Does not block Landing/Login/Register when logged out)
+  if (user && token && loading) {
+    return <Preloader text="Loading your workspace..." />;
+  }
 
   return (
     <Routes>

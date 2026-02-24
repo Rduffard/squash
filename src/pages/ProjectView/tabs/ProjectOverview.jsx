@@ -1,6 +1,14 @@
 import { useMemo } from "react";
+import Preloader from "../../../components/common/Preloader/Preloader.jsx";
 
-export default function ProjectOverview({ project, projectBugs = [] }) {
+export default function ProjectOverview({
+  project,
+  projectBugs = [],
+  ghRepo = null,
+  ghIssues = [],
+  ghLoading = false,
+  ghError = "",
+}) {
   const openBugs = useMemo(() => {
     return projectBugs.filter(
       (bug) => bug.status !== "resolved" && bug.status !== "closed",
@@ -58,6 +66,10 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
         day: "numeric",
       })
     : "—";
+
+  const hasRepo = Boolean(
+    project?.repoFullName && String(project.repoFullName).trim(),
+  );
 
   return (
     <section className="project__grid">
@@ -172,6 +184,87 @@ export default function ProjectOverview({ project, projectBugs = [] }) {
             </div>
           )}
         </div>
+      </article>
+
+      {/* GitHub card */}
+      <article className="project__card">
+        <h2 className="project__card-title">GitHub</h2>
+
+        {!hasRepo ? (
+          <p className="project__card-text project__card-text--muted">
+            No repo linked yet. Add a <code>repoFullName</code> like{" "}
+            <code>owner/repo</code> to enable GitHub info.
+          </p>
+        ) : ghLoading ? (
+          <Preloader variant="inline" text="Loading GitHub data…" />
+        ) : ghError ? (
+          <p className="project__card-text project__card-text--muted">
+            Couldn’t load GitHub data: {ghError}
+          </p>
+        ) : ghRepo ? (
+          <>
+            <p className="project__card-text">
+              <strong>{ghRepo.full_name}</strong>
+            </p>
+
+            {ghRepo.description ? (
+              <p className="project__card-text project__card-text--muted">
+                {ghRepo.description}
+              </p>
+            ) : (
+              <p className="project__card-text project__card-text--muted">
+                No GitHub description provided.
+              </p>
+            )}
+
+            <ul className="project__pill-list">
+              <li className="project__pill-row">
+                <span className="project__pill-label">Stars</span>
+                <span className="project__pill-value">
+                  {ghRepo.stargazers_count}
+                </span>
+              </li>
+              <li className="project__pill-row">
+                <span className="project__pill-label">Forks</span>
+                <span className="project__pill-value">
+                  {ghRepo.forks_count}
+                </span>
+              </li>
+              <li className="project__pill-row">
+                <span className="project__pill-label">Open issues</span>
+                <span className="project__pill-value">
+                  {ghRepo.open_issues_count}
+                </span>
+              </li>
+            </ul>
+
+            <div className="project__recent">
+              <div className="project__recent-label">Open issues (top 10)</div>
+
+              {ghIssues.length ? (
+                <div className="project__recent-body">
+                  <ul className="project__activity-list">
+                    {ghIssues.map((i) => (
+                      <li key={i.id} className="project__activity-item">
+                        <a href={i.html_url} target="_blank" rel="noreferrer">
+                          #{i.number} {i.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <div className="project__recent-body project__recent-body--empty">
+                  No open issues found.
+                </div>
+              )}
+            </div>
+          </>
+        ) : (
+          <p className="project__card-text project__card-text--muted">
+            No GitHub data to display.
+          </p>
+        )}
       </article>
     </section>
   );

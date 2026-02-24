@@ -16,7 +16,7 @@
 }
 
 /* ----------------------------- */
-/* NAV ROW (Back button + New Bug + Tabs) */
+/* NAV ROW (Back button + Actions + Tabs) */
 /* ----------------------------- */
 
 .project__nav-row {
@@ -24,6 +24,13 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 12px;
+}
+
+/* ✅ NEW: Action buttons (Link Repo + New Bug) */
+.project__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Push the Tabs group to the far right */
@@ -186,7 +193,9 @@
   color: #fed7aa;
 }
 
+/* ----------------------------- */
 /* Recent activity snippet */
+/* ----------------------------- */
 
 .project__recent {
   margin-top: 14px;
