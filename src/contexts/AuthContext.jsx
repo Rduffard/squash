@@ -8,7 +8,7 @@ const LEGACY_TOKEN_KEY = "squash_token";
 const LEGACY_USER_KEY = "squash_user";
 
 // ⚠️ match your env var naming (you used VITE_API_BASE here)
-const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:3001";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
 
 function readAuth() {
   // 1) Preferred: cw_auth
