@@ -16,15 +16,26 @@
 }
 
 /* ----------------------------- */
-/* NAV ROW (Back button + Tabs) */
+/* NAV ROW (Back button + Actions + Tabs) */
 /* ----------------------------- */
 
 .project__nav-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
   gap: 16px;
+  margin-bottom: 12px;
+}
+
+/* ✅ NEW: Action buttons (Link Repo + New Bug) */
+.project__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Push the Tabs group to the far right */
+.project__tabs {
+  margin-left: auto;
 }
 
 .project__back-button {
@@ -42,8 +53,12 @@
   font-size: 0.85rem;
   cursor: pointer;
 
-  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
-    transform 0.1s ease, box-shadow 0.1s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
 }
 
 .project__back-button:hover {
@@ -59,10 +74,9 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
 }
 
-/* Tabs wrapper (Tabs component handles inner look) */
-
-/* .project__tabs { */
-/* hook for future tweaks; Tabs.css controls visuals */
+/* Optional hook if you want to target the New Bug button specifically */
+/* .project__new-bug-btn { */
+/* leave empty for now, but handy for future tweaks */
 /* } */
 
 /* ----------------------------- */
@@ -179,7 +193,9 @@
   color: #fed7aa;
 }
 
+/* ----------------------------- */
 /* Recent activity snippet */
+/* ----------------------------- */
 
 .project__recent {
   margin-top: 14px;
@@ -229,7 +245,6 @@
 }
 
 /* Filters inside Defects tab */
-
 .project__filters {
   margin-bottom: 16px;
 }
@@ -314,5 +329,9 @@
   .project__nav-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .project__tabs {
+    margin-left: 0; /* stack naturally on mobile */
   }
 }

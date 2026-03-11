@@ -3,10 +3,10 @@ import "./BugFilters.css";
 
 export default function BugFilters({
   statusFilter,
-  severityFilter,
+  priorityFilter,
   searchTerm,
   onStatusChange,
-  onSeverityChange,
+  onPriorityChange,
   onSearchChange,
   className = "",
 }) {
@@ -23,23 +23,22 @@ export default function BugFilters({
           onChange={(e) => onStatusChange(e.target.value)}
         >
           <option value="all">All</option>
-          <option value="new">New</option>
-          <option value="in-progress">In Progress</option>
-          <option value="blocked">Blocked</option>
+          <option value="open">Open</option>
+          <option value="in_progress">In Progress</option>
           <option value="resolved">Resolved</option>
           <option value="closed">Closed</option>
         </select>
       </div>
 
       <div className="bug-filters__group">
-        <label className="bug-filters__label" htmlFor="severityFilter">
-          Severity
+        <label className="bug-filters__label" htmlFor="priorityFilter">
+          Priority
         </label>
         <select
-          id="severityFilter"
+          id="priorityFilter"
           className="bug-filters__select"
-          value={severityFilter}
-          onChange={(e) => onSeverityChange(e.target.value)}
+          value={priorityFilter}
+          onChange={(e) => onPriorityChange(e.target.value)}
         >
           <option value="all">All</option>
           <option value="low">Low</option>

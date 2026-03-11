@@ -1,24 +1,52 @@
 .app-header {
   height: 56px;
   padding: 0 24px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   background: var(--color-bg-light);
   border-bottom: 1px solid var(--color-border);
 }
 
+/* LEFT */
 .app-header__left {
   display: flex;
   align-items: center;
 }
 
+/* LOGO (button-safe) */
 .app-header__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
   font-weight: 700;
   font-size: 1.1rem;
   color: var(--color-text);
+
+  /* reset button defaults */
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  cursor: pointer;
+  line-height: 1;
 }
 
+.app-header__logo:hover {
+  color: var(--color-accent);
+}
+
+.app-header__logo:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+/* NAV */
 .app-header__nav {
   display: flex;
   gap: 16px;
@@ -28,9 +56,13 @@
   font-size: 0.95rem;
   color: var(--color-text-muted);
   text-decoration: none;
+
   padding-bottom: 2px;
   border-bottom: 2px solid transparent;
-  transition: color var(--transition), border-color var(--transition);
+
+  transition:
+    color var(--transition),
+    border-color var(--transition);
 }
 
 .app-header__link:hover {
@@ -42,6 +74,7 @@
   border-bottom-color: var(--color-accent);
 }
 
+/* RIGHT */
 .app-header__right {
   display: flex;
   align-items: center;
@@ -53,15 +86,21 @@
   color: var(--color-text-muted);
 }
 
+/* LOGOUT BUTTON */
 .app-header__button {
   padding: 6px 12px;
   border-radius: var(--radius);
   border: 1px solid var(--color-border);
+
   background: transparent;
   color: var(--color-text);
+
   font-size: 0.85rem;
   cursor: pointer;
-  transition: background var(--transition), border-color var(--transition);
+
+  transition:
+    background var(--transition),
+    border-color var(--transition);
 }
 
 .app-header__button:hover {

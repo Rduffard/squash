@@ -1,5 +1,5 @@
 /* Outer layout */
-.login {
+.register {
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -9,7 +9,7 @@
 }
 
 /* Card */
-.login__card {
+.register__card {
   background: var(--color-card-bg);
   padding: 32px;
   width: 360px;
@@ -19,21 +19,21 @@
 }
 
 /* Title */
-.login__title {
+.register__title {
   font-size: 2rem;
   margin-bottom: 20px;
   color: var(--color-text);
 }
 
 /* Form */
-.login__form {
+.register__form {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 /* Labels */
-.login__label {
+.register__label {
   text-align: left;
   font-size: 0.85rem;
   color: var(--color-text-muted);
@@ -43,7 +43,7 @@
 }
 
 /* Input */
-.login__input {
+.register__input {
   width: 100%;
   padding: 12px;
   border: 1px solid var(--color-border);
@@ -53,13 +53,13 @@
   transition: border var(--transition);
 }
 
-.login__input:focus {
+.register__input:focus {
   outline: none;
   border-color: var(--color-accent);
 }
 
-/* Buttons */
-.login__button {
+/* Button */
+.register__button {
   width: 100%;
   padding: 12px;
   background: var(--color-accent);
@@ -72,40 +72,29 @@
   transition: background var(--transition);
 }
 
-.login__button:hover {
+.register__button:hover {
   background: var(--color-accent-hover);
 }
 
-.login__button--secondary {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-}
-
-.login__button--secondary:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
 /* Error */
-.login__error {
+.register__error {
   color: #ff6b6b;
   font-size: 0.85rem;
   text-align: left;
 }
 
 /* Hint text */
-.login__hint {
+.register__hint {
   margin-top: 16px;
   font-size: 0.85rem;
   color: var(--color-text-muted);
 }
 
-.login__hint a {
+.register__hint a {
   color: var(--color-accent);
   text-decoration: none;
 }
 
-.login__hint a:hover {
+.register__hint a:hover {
   text-decoration: underline;
 }

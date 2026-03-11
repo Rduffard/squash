@@ -1,404 +1,175 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useMemo } from "react";
-import Header from "../../components/layout/Header/Header.jsx";
-import Sidebar from "../../components/layout/Sidebar/Sidebar.jsx";
-import Button from "../../components/common/Button/Button.jsx";
-import BugCard from "../../components/squash/BugCard/BugCard.jsx";
-import Tabs from "../../components/common/Tabs/Tabs.jsx";
-import BugFilters from "../../components/squash/BugFilters/BugFilters.jsx";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+
+import ProjectHeader from "./components/ProjectHeader.jsx";
+import ProjectOverview from "./tabs/ProjectOverview.jsx";
+import ProjectDefectsTab from "./tabs/ProjectDefectsTab.jsx";
+import ProjectActivityTab from "./tabs/ProjectActivityTab.jsx";
+
+import AddBugModal from "../../components/squash/AddBugModal/AddBugModal.jsx";
+import LinkRepoModal from "../../components/squash/LinkRepoModal/LinkRepoModal.jsx";
+
+import { updateProject as apiUpdateProject } from "../../utils/api.js";
+import { getRepo, getRepoIssues } from "../../utils/githubApi.js";
+
 import "./ProjectView.css";
 
-export default function ProjectView({ projects = [], bugs = [] }) {
+export default function ProjectView({
+  projects = [],
+  bugs = [],
+  addBug,
+  updateProject, // from App (state patcher)
+}) {
   const { projectId } = useParams();
-  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("overview");
 
-  const [activeTab, setActiveTab] = useState("overview"); // "overview" | "bugs" | "activity"
+  const [isAddBugOpen, setIsAddBugOpen] = useState(false);
+  const [isLinkRepoOpen, setIsLinkRepoOpen] = useState(false);
 
-  // Filters for the Defects tab
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [severityFilter, setSeverityFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-
-  // Project + bugs scoped to this project
-  const project = projects.find((p) => p.id === projectId);
-  const projectBugs = bugs.filter((bug) => bug.projectId === projectId);
-
-  const openBugs = projectBugs.filter(
-    (bug) => bug.status !== "resolved" && bug.status !== "closed"
+  const project = useMemo(
+    () => projects.find((p) => String(p._id) === String(projectId)),
+    [projects, projectId],
   );
 
-  // Most recent updates for this project (for Activity tab)
-  const recentActivity = [...projectBugs]
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-    .slice(0, 5);
+  const projectBugs = useMemo(
+    () => bugs.filter((bug) => String(bug.projectId) === String(projectId)),
+    [bugs, projectId],
+  );
 
-  // ----- Overview metrics -----
+  function handleOpenAddBug() {
+    setIsAddBugOpen(true);
+  }
 
-  const statusCounts = useMemo(() => {
-    const counts = {
-      new: 0,
-      "in-progress": 0,
-      blocked: 0,
-      resolved: 0,
-      closed: 0,
-      other: 0,
-    };
+  function handleCloseAddBug() {
+    setIsAddBugOpen(false);
+  }
 
-    projectBugs.forEach((bug) => {
-      const key = bug.status;
-      if (counts[key] !== undefined) {
-        counts[key] += 1;
-      } else {
-        counts.other += 1;
+  async function handleSubmitBug(payload) {
+    if (typeof addBug !== "function") {
+      throw new Error("ProjectView: addBug(payload) is not wired yet.");
+    }
+    await addBug(payload);
+  }
+
+  // --- GitHub data state ---
+  const [ghRepo, setGhRepo] = useState(null);
+  const [ghIssues, setGhIssues] = useState([]);
+  const [ghLoading, setGhLoading] = useState(false);
+  const [ghError, setGhError] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadGitHub() {
+      const repoFullName = project?.repoFullName?.trim();
+
+      if (!repoFullName) {
+        setGhRepo(null);
+        setGhIssues([]);
+        setGhLoading(false);
+        setGhError("");
+        return;
       }
-    });
 
-    return counts;
-  }, [projectBugs]);
+      setGhLoading(true);
+      setGhError("");
 
-  const severityCounts = useMemo(() => {
-    const counts = {
-      low: 0,
-      medium: 0,
-      high: 0,
-      critical: 0,
-      other: 0,
-    };
+      try {
+        const [repo, issues] = await Promise.all([
+          getRepo(repoFullName),
+          getRepoIssues(repoFullName, { state: "open", perPage: 10 }),
+        ]);
 
-    projectBugs.forEach((bug) => {
-      const key = bug.severity;
-      if (counts[key] !== undefined) {
-        counts[key] += 1;
-      } else {
-        counts.other += 1;
+        if (cancelled) return;
+        setGhRepo(repo);
+        setGhIssues(issues);
+      } catch (e) {
+        if (cancelled) return;
+        setGhRepo(null);
+        setGhIssues([]);
+        setGhError(e?.message || "Failed to load GitHub data");
+      } finally {
+        if (cancelled) return;
+        setGhLoading(false);
       }
-    });
-
-    return counts;
-  }, [projectBugs]);
-
-  const lastUpdatedBug =
-    projectBugs.length > 0
-      ? [...projectBugs].sort(
-          (a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
-        )[0]
-      : null;
-
-  const lastUpdatedLabel = lastUpdatedBug?.updatedAt
-    ? new Date(lastUpdatedBug.updatedAt).toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      })
-    : "—";
-
-  // ----- Filters for the Defects tab (applied to projectBugs only) -----
-
-  const filteredProjectBugs = useMemo(() => {
-    let result = [...projectBugs];
-
-    if (statusFilter !== "all") {
-      result = result.filter((bug) => bug.status === statusFilter);
     }
 
-    if (severityFilter !== "all") {
-      result = result.filter((bug) => bug.severity === severityFilter);
+    loadGitHub();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [project?._id, project?.repoFullName]);
+
+  // --- Save repoFullName (Pattern A) ---
+  async function handleSaveRepoFullName(repoFullName) {
+    // 1) Persist to backend (token comes from localStorage inside utils/api.js)
+    const updated = await apiUpdateProject(projectId, { repoFullName });
+
+    // 2) Patch App state (Pattern A)
+    if (typeof updateProject === "function") {
+      const nextRepo =
+        updated?.repoFullName !== undefined
+          ? updated.repoFullName
+          : repoFullName;
+
+      updateProject(projectId, { repoFullName: nextRepo });
     }
-
-    const trimmed = searchTerm.trim().toLowerCase();
-    if (trimmed) {
-      result = result.filter((bug) => {
-        const idMatch = bug.id.toLowerCase().includes(trimmed);
-        const titleMatch = bug.title.toLowerCase().includes(trimmed);
-        return idMatch || titleMatch;
-      });
-    }
-
-    result.sort(
-      (a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0)
-    );
-
-    return result;
-  }, [projectBugs, statusFilter, severityFilter, searchTerm]);
+  }
 
   return (
-    <main className="project">
-      <Header />
+    <section className="project">
+      <ProjectHeader
+        project={project}
+        projectId={projectId}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        onNewBug={handleOpenAddBug}
+        onLinkRepo={() => setIsLinkRepoOpen(true)}
+      />
 
-      <div className="project__body">
-        <Sidebar />
+      {!project ? (
+        <p className="project__empty">
+          No project data available. Check that the ID in the URL matches one
+          from your database.
+        </p>
+      ) : (
+        <>
+          <AddBugModal
+            isOpen={isAddBugOpen}
+            onClose={handleCloseAddBug}
+            onSubmit={handleSubmitBug}
+            projects={projects}
+            defaultProjectId={projectId}
+          />
 
-        <section className="project__content">
-          {/* NAV ROW: back + tabs */}
-          <div className="project__nav-row">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="project__back-button"
-              onClick={() => navigate("/projects")}
-            >
-              ← Back to Projects
-            </Button>
+          <LinkRepoModal
+            isOpen={isLinkRepoOpen}
+            onClose={() => setIsLinkRepoOpen(false)}
+            initialValue={project.repoFullName || ""}
+            onSave={handleSaveRepoFullName}
+          />
 
-            {project && (
-              <Tabs
-                tabs={[
-                  { id: "overview", label: "Overview" },
-                  { id: "bugs", label: "Defects" },
-                  { id: "activity", label: "Activity" },
-                ]}
-                activeId={activeTab}
-                onChange={setActiveTab}
-                className="project__tabs"
-              />
-            )}
-          </div>
-
-          {/* Header */}
-          <header className="project__header">
-            <h1 className="project__title">
-              {project ? project.name : `Project ${projectId}`}
-            </h1>
-            <p className="project__subtitle">
-              {project
-                ? `ID: ${project.id} • Status: ${project.status}`
-                : "This project could not be found."}
-            </p>
-          </header>
-
-          {!project ? (
-            <p className="project__empty">
-              No project data available. Check that the ID in the URL matches
-              one from your demo data (e.g. <code>PRJ-1</code>,{" "}
-              <code>PRJ-2</code>).
-            </p>
-          ) : (
-            <>
-              {/* ---------------- OVERVIEW TAB ---------------- */}
-              {activeTab === "overview" && (
-                <section className="project__grid">
-                  {/* Summary card */}
-                  <article className="project__card">
-                    <h2 className="project__card-title">Summary</h2>
-
-                    <p className="project__card-text project__card-text--muted">
-                      {project.description || "No description provided yet."}
-                    </p>
-
-                    <dl className="project__stats">
-                      <div className="project__stat">
-                        <dt className="project__stat-label">Total bugs</dt>
-                        <dd className="project__stat-value">
-                          {projectBugs.length}
-                        </dd>
-                      </div>
-                      <div className="project__stat">
-                        <dt className="project__stat-label">Open bugs</dt>
-                        <dd className="project__stat-value project__stat-value--accent">
-                          {openBugs.length}
-                        </dd>
-                      </div>
-                      <div className="project__stat">
-                        <dt className="project__stat-label">
-                          Resolved / closed
-                        </dt>
-                        <dd className="project__stat-value">
-                          {projectBugs.length - openBugs.length}
-                        </dd>
-                      </div>
-                    </dl>
-                  </article>
-
-                  {/* Status overview card */}
-                  <article className="project__card">
-                    <h2 className="project__card-title">Status overview</h2>
-                    <p className="project__card-text project__card-text--muted">
-                      Current distribution of issues by workflow state.
-                    </p>
-
-                    <ul className="project__pill-list">
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">New</span>
-                        <span className="project__pill-value">
-                          {statusCounts.new}
-                        </span>
-                      </li>
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">In progress</span>
-                        <span className="project__pill-value">
-                          {statusCounts["in-progress"]}
-                        </span>
-                      </li>
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">Blocked</span>
-                        <span className="project__pill-value">
-                          {statusCounts.blocked}
-                        </span>
-                      </li>
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">Resolved</span>
-                        <span className="project__pill-value">
-                          {statusCounts.resolved}
-                        </span>
-                      </li>
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">Closed</span>
-                        <span className="project__pill-value">
-                          {statusCounts.closed}
-                        </span>
-                      </li>
-                    </ul>
-                  </article>
-
-                  {/* Severity & recency card */}
-                  <article className="project__card">
-                    <h2 className="project__card-title">
-                      Risk &amp; recent activity
-                    </h2>
-
-                    <p className="project__card-text project__card-text--muted">
-                      Quick look at severity mix and the most recent change.
-                    </p>
-
-                    <ul className="project__pill-list">
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">
-                          Critical issues
-                        </span>
-                        <span className="project__pill-value project__pill-value--critical">
-                          {severityCounts.critical}
-                        </span>
-                      </li>
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">High</span>
-                        <span className="project__pill-value project__pill-value--high">
-                          {severityCounts.high}
-                        </span>
-                      </li>
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">Medium</span>
-                        <span className="project__pill-value">
-                          {severityCounts.medium}
-                        </span>
-                      </li>
-                      <li className="project__pill-row">
-                        <span className="project__pill-label">Low</span>
-                        <span className="project__pill-value">
-                          {severityCounts.low}
-                        </span>
-                      </li>
-                    </ul>
-
-                    <div className="project__recent">
-                      <div className="project__recent-label">
-                        Last updated bug
-                      </div>
-                      {lastUpdatedBug ? (
-                        <div className="project__recent-body">
-                          <span className="project__recent-id">
-                            {lastUpdatedBug.id}
-                          </span>
-                          <span className="project__recent-title">
-                            {lastUpdatedBug.title}
-                          </span>
-                          <span className="project__recent-date">
-                            Updated {lastUpdatedLabel}
-                          </span>
-                        </div>
-                      ) : (
-                        <div className="project__recent-body project__recent-body--empty">
-                          No activity yet.
-                        </div>
-                      )}
-                    </div>
-                  </article>
-                </section>
-              )}
-
-              {/* ---------------- BUGS / DEFECTS TAB ---------------- */}
-              {activeTab === "bugs" && (
-                <section className="project__tab-panel">
-                  <BugFilters
-                    statusFilter={statusFilter}
-                    severityFilter={severityFilter}
-                    searchTerm={searchTerm}
-                    onStatusChange={setStatusFilter}
-                    onSeverityChange={setSeverityFilter}
-                    onSearchChange={setSearchTerm}
-                    className="project__filters"
-                  />
-
-                  <article className="project__card project__card--full">
-                    <div className="project__card-header-row">
-                      <h2 className="project__card-title">Defects</h2>
-                      <p className="project__card-meta">
-                        {projectBugs.length} total • {openBugs.length} open
-                      </p>
-                    </div>
-
-                    {filteredProjectBugs.length === 0 ? (
-                      <p className="project__card-text">
-                        No bugs match these filters for this project yet.
-                      </p>
-                    ) : (
-                      <ul className="project__bug-list">
-                        {filteredProjectBugs.map((bug) => (
-                          <li key={bug.id} className="project__bug-item">
-                            <BugCard
-                              bug={bug}
-                              project={project}
-                              onClick={() => navigate(`/bugs/${bug.id}`)}
-                              className="project__bug-card"
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </article>
-                </section>
-              )}
-
-              {/* ---------------- ACTIVITY TAB ---------------- */}
-              {activeTab === "activity" && (
-                <section className="project__tab-panel">
-                  <article className="project__card project__card--full">
-                    <h2 className="project__card-title">Recent Activity</h2>
-
-                    {recentActivity.length === 0 ? (
-                      <p className="project__card-text">
-                        No recent updates for this project yet.
-                      </p>
-                    ) : (
-                      <ul className="project__activity-list">
-                        {recentActivity.map((bug) => (
-                          <li key={bug.id} className="project__activity-item">
-                            <div className="project__activity-main">
-                              <span className="project__activity-bug-id">
-                                {bug.id}
-                              </span>
-                              <span className="project__activity-title">
-                                {bug.title}
-                              </span>
-                            </div>
-                            <div className="project__activity-meta">
-                              <span className="project__activity-time">
-                                Updated{" "}
-                                {new Date(bug.updatedAt).toLocaleDateString(
-                                  undefined,
-                                  { month: "short", day: "numeric" }
-                                )}
-                              </span>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </article>
-                </section>
-              )}
-            </>
+          {activeTab === "overview" && (
+            <ProjectOverview
+              project={project}
+              projectBugs={projectBugs}
+              ghRepo={ghRepo}
+              ghIssues={ghIssues}
+              ghLoading={ghLoading}
+              ghError={ghError}
+            />
           )}
-        </section>
-      </div>
-    </main>
+
+          {activeTab === "bugs" && (
+            <ProjectDefectsTab project={project} projectBugs={projectBugs} />
+          )}
+
+          {activeTab === "activity" && (
+            <ProjectActivityTab projectBugs={projectBugs} />
+          )}
+        </>
+      )}
+    </section>
   );
 }
