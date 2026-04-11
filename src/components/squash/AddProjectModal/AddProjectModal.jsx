@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Modal from "../../common/Modal/Modal.jsx";
 import Button from "../../common/Button/Button.jsx";
 import "./AddProjectModal.css";
@@ -6,12 +6,6 @@ import "./AddProjectModal.css";
 export default function AddProjectModal({ isOpen, onClose, onSubmit }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    if (!isOpen) return;
-    setName("");
-    setDescription("");
-  }, [isOpen]);
 
   const isValid = useMemo(() => name.trim().length >= 2, [name]);
 

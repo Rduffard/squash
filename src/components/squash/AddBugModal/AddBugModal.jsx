@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Modal from "../../common/Modal/Modal.jsx";
 import Button from "../../common/Button/Button.jsx";
 import "./AddBugModal.css";
@@ -28,16 +28,6 @@ export default function AddBugModal({
   const [projectId, setProjectId] = useState(defaultProjectId || "");
 
   const isProjectLocked = Boolean(defaultProjectId);
-
-  // Reset whenever the modal opens/closes or the default changes
-  useEffect(() => {
-    if (!isOpen) return;
-    setTitle("");
-    setDescription("");
-    setStatus(DEFAULT_STATUS);
-    setPriority(DEFAULT_PRIORITY);
-    setProjectId(defaultProjectId || "");
-  }, [isOpen, defaultProjectId]);
 
   function handleClose() {
     onClose?.();

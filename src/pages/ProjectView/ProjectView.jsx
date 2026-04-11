@@ -89,8 +89,9 @@ export default function ProjectView({
         setGhIssues([]);
         setGhError(e?.message || "Failed to load GitHub data");
       } finally {
-        if (cancelled) return;
-        setGhLoading(false);
+        if (!cancelled) {
+          setGhLoading(false);
+        }
       }
     }
 
