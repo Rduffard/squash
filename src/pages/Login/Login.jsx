@@ -32,7 +32,7 @@ function Login() {
 
       const { token } = data;
 
-      const meRes = await fetch(`${API_BASE}/auth/users/me`, {
+      const meRes = await fetch(`${API_BASE}/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

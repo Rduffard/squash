@@ -93,7 +93,7 @@ export function AuthProvider({ children }) {
     // ✅ make sure state token is set even before /me returns
     setToken(storedToken);
 
-    fetch(`${API_BASE}/auth/users/me`, {
+    fetch(`${API_BASE}/users/me`, {
       headers: { Authorization: `Bearer ${storedToken}` },
     })
       .then((res) => {
