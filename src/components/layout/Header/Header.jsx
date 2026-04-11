@@ -24,7 +24,9 @@ export default function Header() {
           onClick={handleLogoClick}
           aria-label="Go to dashboard"
         >
-          Squash 🐛
+          <span>Squash</span>
+          <span aria-hidden="true">bug</span>
+          <span className="app-header__badge">live</span>
         </button>
       </div>
 

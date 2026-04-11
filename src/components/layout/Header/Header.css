@@ -40,6 +40,17 @@
   color: var(--color-accent);
 }
 
+.app-header__badge {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-accent) 36%, transparent);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .app-header__logo:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;
