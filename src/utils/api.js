@@ -141,3 +141,18 @@ export function deleteBug(bugId) {
     method: "DELETE",
   });
 }
+
+/* -------------------------------------------------------------------------- */
+/*                              SHARED SETTINGS                               */
+/* -------------------------------------------------------------------------- */
+
+export function getUserSettings() {
+  return request("/auth/users/me/settings");
+}
+
+export function updateUserSettings(settings) {
+  return request("/auth/users/me/settings", {
+    method: "PATCH",
+    body: settings,
+  });
+}

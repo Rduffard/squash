@@ -1,10 +1,12 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth.js";
+import { getUserDisplayName } from "../../../utils/userDisplay.js";
 import "./Header.css";
 
 export default function Header() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const displayName = getUserDisplayName(user);
 
   function handleLogout() {
     logout();
@@ -52,7 +54,7 @@ export default function Header() {
       </nav>
 
       <div className="app-header__right">
-        {user && <span className="app-header__user">{user.email}</span>}
+        {user && <span className="app-header__user">{displayName}</span>}
         <button
           className="app-header__button"
           type="button"
